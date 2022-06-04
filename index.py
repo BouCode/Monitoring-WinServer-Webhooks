@@ -14,40 +14,43 @@ headers = { "Content-Type": "application/json"}
 @app.route ("/monitor-win", methods= ['POST'])
 def monitor_win ():
     request_data   = request.get_json()
-    memory_porcent = str(request_data["p_memory"]) + "%"
-    disk_porcent   = str(request_data["p_disk"]) + "%"
-    disk_free      = str(request_data["disk_free"]) + "GB"
-    disk_used      = str(request_data["disk_used"]) + "GB"
+    memory_porcent = request_data["p_memory"]
+    disk_porcent   = request_data["p_disk"]
+    disk_free      = request_data["disk_free"]
+    disk_used      = str(request_data["disk_used"])
+
     data = {
         "username": 'Tu viejo reportando directo en directo',
         "avatar_url": "https://i.imgur.com/4M34hi2.png", 
+        "content": "¡ALERTA! Consumo excesivo de memoria",
         "embeds" : [{
             "fields": [
                 {
                     "name": "Memoria %", 
-                    "value": memory_porcent,
+                    "value": str(memory_porcent) + '%',
                     "inline": True
                 },
                 {
                     "name": "Disco %", 
-                    "value": disk_porcent,
+                    "value": str(disk_porcent) + '%',
                     "inline": True, 
 
                 },
                 {
                     "name": "Espacio en disco", 
-                    "value": disk_free,
+                    "value": str(disk_free) + 'GB',
                 },
                 {
                     "name": "Almacenamiento en disco", 
-                    "value": disk_used,
+                    "value": str(disk_used) + 'GB',
                 },                        
             ]
         }]
     }
 
-    x = requests.post(url, headers = headers, json = data)
-    print(x)
+    if memory_porcent > 88 or disk_porcent > 74:
+        requests.post(url, headers = headers, json = data)
+
     return jsonify(msg="Data received!")
 
 app.run(host='0.0.0.0', port=5000, debug=True)
