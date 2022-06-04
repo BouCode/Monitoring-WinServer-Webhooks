@@ -1,3 +1,4 @@
+
 $disk_free = Get-PSDrive C | ForEach-Object {$_.Free /1GB}
 $disk_used = Get-PSDrive C | ForEach-Object {$_.Used /1GB}
 
@@ -38,10 +39,10 @@ function Get-Data {
         $value_porcent_occupid_memory = Get-Porcent-Memory
         $value_porcent_occupid_disk = Get-Porcent-Disk
         $data = @{
-            "%memory"   = $value_porcent_occupid_memory
-            "disk_used" = $disk_used
-            "disk_free" = $disk_free
-            "%disk"     = $value_porcent_occupid_disk
+            "p_memory"   = [Math]::Round($value_porcent_occupid_memory,2)
+            "disk_used" = [Math]::Round($disk_used,2)
+            "disk_free" = [Math]::Round($disk_free,2)
+            "p_disk"     = [Math]::Round($value_porcent_occupid_disk,2)
         }
         return $data
 }
@@ -52,8 +53,8 @@ function Post-Data {
     return $response
 }
 function Get-Main {
-    $data = Get-Data
-    $req_json = Post-Data $data $headers $URL_POST
+    $data_hash = Get-Data
+    $req_json = Post-Data $data_hash $headers $URL_POST
     Write-Host $req_json
 }
 
