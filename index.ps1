@@ -57,5 +57,4 @@ function Get-Main {
     $req_json = Post-Data $data_hash $headers $URL_POST
     Write-Host $req_json
 }
-
 Get-Main
