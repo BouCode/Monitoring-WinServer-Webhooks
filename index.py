@@ -18,7 +18,7 @@ def monitor_win ():
     disk_porcent   = request_data["p_disk"]
     disk_free      = request_data["disk_free"]
     disk_used      = str(request_data["disk_used"])
-
+    cpu_porcent    = request_data["p_cpu"]
     data = {
         "username": 'Tu viejo reportando directo en directo',
         "avatar_url": "https://i.imgur.com/4M34hi2.png", 
@@ -43,12 +43,16 @@ def monitor_win ():
                 {
                     "name": "Almacenamiento en disco", 
                     "value": str(disk_used) + 'GB',
-                },                        
+                },
+                {
+                    "name": "CPU %", 
+                    "value": str(cpu_porcent) + '%',
+                }
             ]
         }]
     }
 
-    if memory_porcent > 88 or disk_porcent > 74:
+    if memory_porcent > 89 or disk_porcent > 75 or cpu_porcent > 60:
         requests.post(url, headers = headers, json = data)
 
     return jsonify(msg="Data received!")

@@ -10,6 +10,11 @@ $headers = @{
     "Content-type" = "application/json"
 }
 
+function Get-Porcent-CPU {
+    $value_cpu = (get-counter -counter "\Processor(*)\% Processor Time").counterSamples | findstr 'total'
+    $value_cpu = $value_cpu.ToString().Split(" ")
+    return $value_cpu[-1]
+}
 
 function Get-Memory {
     param($param) 
@@ -38,11 +43,13 @@ function Get-Porcent-Disk {
 function Get-Data {
         $value_porcent_occupid_memory = Get-Porcent-Memory
         $value_porcent_occupid_disk = Get-Porcent-Disk
+        $value_porcent_cpu = Get-Porcent-CPU
         $data = @{
             "p_memory"   = [Math]::Round($value_porcent_occupid_memory,2)
-            "disk_used" = [Math]::Round($disk_used,2)
-            "disk_free" = [Math]::Round($disk_free,2)
+            "disk_used"  = [Math]::Round($disk_used,2)
+            "disk_free"  = [Math]::Round($disk_free,2)
             "p_disk"     = [Math]::Round($value_porcent_occupid_disk,2)
+            "p_cpu"      = [Math]::Round($value_porcent_cpu, 2)
         }
         return $data
 }
